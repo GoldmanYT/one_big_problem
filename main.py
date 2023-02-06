@@ -1,5 +1,6 @@
 import sys
 import requests
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import uic
@@ -31,6 +32,12 @@ class Example(QMainWindow):
         else:
             self.err.setText('Ошибка')
             print(response.content)
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_PageDown:
+            self.size.setValue(self.size.value() - 1)
+        if event.key() == Qt.Key_PageUp:
+            self.size.setValue(self.size.value() + 1)
 
 
 def except_hook(cls, exception, traceback):
