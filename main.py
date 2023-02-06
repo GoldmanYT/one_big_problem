@@ -37,14 +37,21 @@ class Example(QMainWindow):
         self.size.valueChanged.connect(self.show_map)
         self.c1.valueChanged.connect(self.show_map)
         self.c2.valueChanged.connect(self.show_map)
+        self.cb_layer.currentIndexChanged.connect(self.show_map)
         self.im = None
 
     def show_map(self):
         size = self.size.value()
         c1 = self.c1.value()
         c2 = self.c2.value()
+        layer = self.cb_layer.currentIndex()
+        get_layer = {
+            0: 'map',
+            1: 'sat',
+            2: 'sat,skl'
+        }
         spn = K1 / size + K2
-        request = f'https://static-maps.yandex.ru/1.x/?ll={c1},{c2}&size=450,450&spn={spn},{spn}&l=map'
+        request = f'https://static-maps.yandex.ru/1.x/?ll={c1},{c2}&size=450,450&spn={spn},{spn}&l={get_layer[layer]}'
         response = requests.get(request)
         if response:
             self.err.setText('')
