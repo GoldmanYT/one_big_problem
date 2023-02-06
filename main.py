@@ -32,13 +32,16 @@ class Example(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('ui.ui', self)
+        self.im = None
+        self.mark_pos = None
+
         self.show_map()
         self.btn_show_map.clicked.connect(self.show_map)
         self.size.valueChanged.connect(self.show_map)
         self.c1.valueChanged.connect(self.show_map)
         self.c2.valueChanged.connect(self.show_map)
         self.cb_layer.currentIndexChanged.connect(self.show_map)
-        self.im = None
+        self.btn_seacrh.clicked.connect(self.search)
 
     def show_map(self):
         size = self.size.value()
@@ -51,7 +54,12 @@ class Example(QMainWindow):
             2: 'sat,skl'
         }
         spn = K1 / size + K2
-        request = f'https://static-maps.yandex.ru/1.x/?ll={c1},{c2}&size=450,450&spn={spn},{spn}&l={get_layer[layer]}'
+        if self.mark_pos is not None:
+            mark = f'&pt={self.mark_pos},pm2rdm'
+        else:
+            mark = ''
+        request = f'https://static-maps.yandex.ru/1.x/?ll={c1},{c2}&size=450,450&spn={spn},{spn}&l={get_layer[layer]}' \
+                  f'{mark}'
         response = requests.get(request)
         if response:
             self.err.setText('')
@@ -59,6 +67,23 @@ class Example(QMainWindow):
                 f.write(response.content)
             self.im = QPixmap('res.png')
             self.res.setPixmap(self.im)
+        else:
+            self.err.setText('Ошибка')
+            print(response.content)
+
+    def search(self):
+        geocode = self.le_search.text()
+        apikey = "40d1649f-0493-4b70-98ba-98533de7710b"
+        geocoder_request = f"http://geocode-maps.yandex.ru/1.x/?apikey={apikey}&geocode={geocode}&format=json"
+        response = requests.get(geocoder_request)
+        if response:
+            self.err.setText('')
+            json_response = response.json()
+            s = json_response['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos']
+            c1, c2 = s.split()
+            self.mark_pos = ','.join((c1, c2))
+            self.c1.setValue(float(c1))
+            self.c2.setValue(float(c2))
         else:
             self.err.setText('Ошибка')
             print(response.content)
