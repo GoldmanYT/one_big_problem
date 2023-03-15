@@ -219,6 +219,19 @@
      <string>Искать</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="btn_del_mark">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>540</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Сброс метки</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>

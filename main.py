@@ -42,6 +42,7 @@ class Example(QMainWindow):
         self.c2.valueChanged.connect(self.show_map)
         self.cb_layer.currentIndexChanged.connect(self.show_map)
         self.btn_seacrh.clicked.connect(self.search)
+        self.btn_del_mark.clicked.connect(self.del_mark)
 
     def show_map(self):
         size = self.size.value()
@@ -87,6 +88,10 @@ class Example(QMainWindow):
         else:
             self.err.setText('Ошибка')
             print(response.content)
+
+    def del_mark(self):
+        self.mark_pos = None
+        self.show_map()
 
     def eventFilter(self, obj, event):
         if event.type() == QtCore.QEvent.KeyPress:
