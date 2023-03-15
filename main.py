@@ -71,6 +71,7 @@ class Example(QMainWindow):
         else:
             self.err.setText('Ошибка')
             print(response.content)
+        self.show_address(c1, c2)
 
     def search(self):
         geocode = self.le_search.text()
@@ -88,6 +89,19 @@ class Example(QMainWindow):
         else:
             self.err.setText('Ошибка')
             print(response.content)
+
+    def show_address(self, c1, c2):
+        apikey = "40d1649f-0493-4b70-98ba-98533de7710b"
+        geocode = f'{c1},{c2}'
+        geocoder_request = f"http://geocode-maps.yandex.ru/1.x/?apikey={apikey}&geocode={geocode}&format=json"
+        response = requests.get(geocoder_request)
+        if response:
+            json_response = response.json()
+            address = json_response['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']\
+                ['metaDataProperty']['GeocoderMetaData']['Address']['formatted']
+        else:
+            print(response.content)
+        self.le_address.setText(address)
 
     def del_mark(self):
         self.mark_pos = None

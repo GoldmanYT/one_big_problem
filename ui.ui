@@ -232,6 +232,29 @@
      <string>Сброс метки</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>270</y>
+      <width>47</width>
+      <height>13</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Адрес</string>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="le_address">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>300</y>
+      <width>261</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
