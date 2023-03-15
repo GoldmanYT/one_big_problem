@@ -5,8 +5,8 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import uic, QtCore
 
-
 K1, K2 = 203.995, -11.998
+# Координаты для проверки индекса: 47,216183 56,138722
 
 
 class KeyHelper(QtCore.QObject):
@@ -99,9 +99,17 @@ class Example(QMainWindow):
             json_response = response.json()
             address = json_response['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']\
                 ['metaDataProperty']['GeocoderMetaData']['Address']['formatted']
+            try:
+                postal_code = json_response['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']\
+                    ['metaDataProperty']['GeocoderMetaData']['AddressDetails']['Country']['AdministrativeArea']\
+                    ['SubAdministrativeArea']['Locality']['Thoroughfare']['Premise']['PostalCode']['PostalCodeNumber']
+            except Exception:
+                postal_code = ''
+            if self.cb_postal_code.isChecked():
+                address = f"{postal_code} {address}"
+            self.le_address.setText(address)
         else:
             print(response.content)
-        self.le_address.setText(address)
 
     def del_mark(self):
         self.mark_pos = None

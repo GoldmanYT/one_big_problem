@@ -85,7 +85,7 @@
      </rect>
     </property>
     <property name="decimals">
-     <number>3</number>
+     <number>6</number>
     </property>
     <property name="minimum">
      <double>-180.000000000000000</double>
@@ -107,7 +107,7 @@
      </rect>
     </property>
     <property name="decimals">
-     <number>3</number>
+     <number>6</number>
     </property>
     <property name="minimum">
      <double>-90.000000000000000</double>
@@ -253,6 +253,19 @@
       <width>261</width>
       <height>41</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="cb_postal_code">
+    <property name="geometry">
+     <rect>
+      <x>120</x>
+      <y>270</y>
+      <width>111</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Почтовый индекс</string>
     </property>
    </widget>
   </widget>
