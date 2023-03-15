@@ -34,6 +34,8 @@ class Example(QMainWindow):
         uic.loadUi('ui.ui', self)
         self.im = None
         self.mark_pos = None
+        self.postal_code = ''
+        self.address = ''
 
         self.show_map()
         self.btn_show_map.clicked.connect(self.show_map)
@@ -43,6 +45,7 @@ class Example(QMainWindow):
         self.cb_layer.currentIndexChanged.connect(self.show_map)
         self.btn_seacrh.clicked.connect(self.search)
         self.btn_del_mark.clicked.connect(self.del_mark)
+        self.cb_postal_code.stateChanged.connect(self.change_postal_code)
 
     def show_map(self):
         size = self.size.value()
@@ -90,6 +93,12 @@ class Example(QMainWindow):
             self.err.setText('Ошибка')
             print(response.content)
 
+    def change_postal_code(self):
+        address = self.address
+        if self.cb_postal_code.isChecked():
+            address = f"{self.postal_code} {self.address}"
+        self.le_address.setText(address)
+
     def show_address(self, c1, c2):
         apikey = "40d1649f-0493-4b70-98ba-98533de7710b"
         geocode = f'{c1},{c2}'
@@ -105,6 +114,8 @@ class Example(QMainWindow):
                     ['SubAdministrativeArea']['Locality']['Thoroughfare']['Premise']['PostalCode']['PostalCodeNumber']
             except Exception:
                 postal_code = ''
+            self.address = address
+            self.postal_code = postal_code
             if self.cb_postal_code.isChecked():
                 address = f"{postal_code} {address}"
             self.le_address.setText(address)
