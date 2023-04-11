@@ -48,7 +48,7 @@ class Example(QMainWindow):
         self.cb_postal_code.stateChanged.connect(self.change_postal_code)
 
     def mousePressEvent(self, event):
-        if event.button() != Qt.LeftButton:
+        if event.button() not in (Qt.LeftButton, Qt.RightButton):
             return
         x, y = event.x(), event.y()
         if not (330 <= x <= 330 + 450 and 70 <= y <= 70 + 450):
@@ -60,7 +60,7 @@ class Example(QMainWindow):
         x0, y0 = c1 - spn / 2, c2 + spn / 2
         self.mark_pos = f'{x0 + (x - 330) * spn / 450},{y0 - (y - 70) * spn / 450}'
         self.show_map()
-        self.show_address(*self.mark_pos.split(','))
+        self.show_address(*self.mark_pos.split(','), event.button() == Qt.RightButton)
 
     def show_map(self):
         size = self.size.value()
@@ -114,7 +114,33 @@ class Example(QMainWindow):
             address = f"{self.postal_code} {self.address}"
         self.le_address.setText(address)
 
-    def show_address(self, c1, c2):
+    def show_address(self, c1, c2, org_search=False):
+        if org_search:
+            search_api_server = "https://search-maps.yandex.ru/v1/"
+            api_key = "99f9c994-307e-4fa7-b70c-5d6ef3439e7c"
+            geocode = f'{c1},{c2}'
+            search_params = {
+                "apikey": api_key,
+                "text": geocode,
+                "lang": "ru_RU",
+                "ll": geocode,
+                "type": "biz",
+                "spn": f"{50/111135},{50/111135}",
+                "rspn": 1
+            }
+            response = requests.get(search_api_server, params=search_params)
+            if not response:
+                print(response.content)
+                return
+            json_response = response.json()
+            try:
+                organization = json_response["features"][0]
+                org_name = organization["properties"]["CompanyMetaData"]["name"]
+                self.le_address.setText(f'Организация: {org_name}')
+            except Exception:
+                self.le_address.setText('')
+            return
+
         apikey = "40d1649f-0493-4b70-98ba-98533de7710b"
         geocode = f'{c1},{c2}'
         geocoder_request = f"http://geocode-maps.yandex.ru/1.x/?apikey={apikey}&geocode={geocode}&format=json"
