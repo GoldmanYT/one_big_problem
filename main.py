@@ -47,6 +47,21 @@ class Example(QMainWindow):
         self.btn_del_mark.clicked.connect(self.del_mark)
         self.cb_postal_code.stateChanged.connect(self.change_postal_code)
 
+    def mousePressEvent(self, event):
+        if event.button() != Qt.LeftButton:
+            return
+        x, y = event.x(), event.y()
+        if not (330 <= x <= 330 + 450 and 70 <= y <= 70 + 450):
+            return
+        size = self.size.value()
+        c1 = self.c1.value()
+        c2 = self.c2.value()
+        spn = K1 / size + K2
+        x0, y0 = c1 - spn / 2, c2 + spn / 2
+        self.mark_pos = f'{x0 + (x - 330) * spn / 450},{y0 - (y - 70) * spn / 450}'
+        self.show_map()
+        self.show_address(*self.mark_pos.split(','))
+
     def show_map(self):
         size = self.size.value()
         c1 = self.c1.value()
